@@ -3,11 +3,13 @@ package model;
 public class Player {
 	private String token;
 	private int position;
+	private int attempts;
 	private Player next;
 	
-	public Player(String token, int position) {
+	public Player(String token) {
 		this.token = token;
-		this.position = position;
+		attempts=0;
+		position = 1;
 	}
 	
 	public String getToken() {
@@ -29,6 +31,14 @@ public class Player {
 	
 	public void setNext(Player p) {
 		next=p;
+	}
+
+	public int getAttempts() {
+		return attempts;
+	}
+
+	public void addAttempts() {
+		attempts++;
 	}
 	
 }
