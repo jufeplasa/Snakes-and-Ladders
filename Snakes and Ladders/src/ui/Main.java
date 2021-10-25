@@ -6,12 +6,13 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 
 import model.Board;
+import model.Player;
 
 public class Main {
 	private static Scanner sc;
 	private static Board board;
 	public static void main(String[] args) throws IOException {
-		board=new Board();
+		
 		sc=new Scanner(System.in);
 		boolean conti=true;
 		while(conti) {
@@ -24,9 +25,15 @@ public class Main {
 				break;
 
 			case 2:
+				System.out.println(board.showBoard());
 				break;
 
 			case 3:
+				showPlayers(board.getFirstPlayer());
+				break;
+				
+				
+			case 4:
 				conti=false;
 				break;
 			}
@@ -39,7 +46,8 @@ public class Main {
 		System.out.println(" Select an option ");
 		System.out.println("1: Registered game values");
 		System.out.println("2: Show the board");
-		System.out.println("3: Exit of the program ");
+		System.out.println("3: Show players");
+		System.out.println("4: Exit of the program ");
 		option=sc.nextInt();
 		sc.nextLine();
 		return option;
@@ -51,20 +59,22 @@ public class Main {
 		String [] part;
 		BufferedReader br= new BufferedReader( new InputStreamReader(System.in));
 		System.out.println("Please enter the values to the game in the next order:\n ");
-		System.out.println("# files, # columns, # snakes, # ladders and tokens of players ( * ! O X % $ # + &) ");
+		System.out.println("# Rows, # columns, # snakes, # ladders and tokens of players ( * ! O X % $ # + &) ");
 		String values=br.readLine();
 		part=values.split("\\ ");
 		token= part[4].split("");
-		board.addSquares(Integer.parseInt(part[0]),Integer.parseInt(part[1]));
-		board.addSnakes(Integer.parseInt(part[2]));
-		board.addLadders(Integer.parseInt(part[3]));
-		board.addPlayer(token);
-		for(int i=0;i<part.length;i++) {
-			System.out.println(part[i]);
+		board=new Board(Integer.parseInt(part[0]),Integer.parseInt(part[1]));
+		board.createSquares();
+		board.addPlayer(token,0);
+	}
+	
+	public static void showPlayers(Player player) {
+		Player current=player;
+		if(current!=null) {
+			System.out.println("el jugador: "+current.getToken());
+			if(current.getNext()!=null) {
+				showPlayers(player.getNext());
+			}
 		}
-		for(int i=0;i<token.length;i++) {
-			System.out.println(token[i]);
-		}
-		
-	}	
+	}
 }
