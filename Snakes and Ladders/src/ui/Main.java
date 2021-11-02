@@ -5,49 +5,80 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
-import model.Board;
+import model.Game;
 import model.Player;
 
 public class Main {
 	private static Scanner sc;
-	private static Board board;
+	private static Game board;
 	public static void main(String[] args) throws IOException {
 		
 		sc=new Scanner(System.in);
 		boolean conti=true;
+		boolean gameMenu=false;
 		while(conti) {
 			int choose=showMenu();
 			switch(choose) {
 
 			case 1:
-				
 				enterValues();
-				break;
-
-			case 2:
-				System.out.println(board.showBoard());
-				break;
-
-			case 3:
-				showPlayers(board.getFirstPlayer());
-				break;
-				
-				
-			case 4:
 				conti=false;
+				gameMenu=true;
+				break;
+				
+			case 2:
+				conti=false;
+				System.out.println("You have exited of the game.");
 				break;
 			}
 		}
+		
+		
+		while(gameMenu) {
+			int choose=showMenu2();
+			switch(choose) {
+
+			case 1:
+				throwDices();
+				if(board.endGame()) {
+					
+				}
+				else {
+					board.nextTurn();
+				}
+				
+				break;
+				
+			case 2:
+				System.out.println(board.showBoard());
+				break;
+				
+			case 3:
+				showPlayers(board.getFirstPlayer());
+				break;
+			}
+		}
+		
 	}
 
 	public static int showMenu() {
 		int option;
-
 		System.out.println(" Select an option ");
 		System.out.println("1: Registered game values");
-		System.out.println("2: Show the board");
-		System.out.println("3: Show players");
-		System.out.println("4: Exit of the program ");
+		System.out.println("2: Exit of the program ");
+		option=sc.nextInt();
+		sc.nextLine();
+		return option;
+	}
+	
+	
+	public static int showMenu2() {
+		int option;
+		System.out.println("It's turn to player: "+showPlayerTurn()+"\nWhat do you want to do?");
+		System.out.println("1: Throw the dices");
+		System.out.println("2: Show the board game ");
+		System.out.println("3: Show the players ");
+		
 		option=sc.nextInt();
 		sc.nextLine();
 		return option;
@@ -63,7 +94,7 @@ public class Main {
 		String values=br.readLine();
 		part=values.split("\\ ");
 		token= part[4].split("");
-		board=new Board(Integer.parseInt(part[0]),Integer.parseInt(part[1]));
+		board=new Game(Integer.parseInt(part[0]),Integer.parseInt(part[1]));
 		board.createSquares();
 		board.addPlayer(token,0);
 	}
@@ -72,9 +103,19 @@ public class Main {
 		Player current=player;
 		if(current!=null) {
 			System.out.println("el jugador: "+current.getToken());
-			if(current.getNext()!=null) {
+			if(current.getNext()!=board.getHead()) {
 				showPlayers(player.getNext());
 			}
 		}
+	}
+	
+	public static String showPlayerTurn() {
+		String playerToken=board.getCurrentPlayer().getToken();
+		return playerToken;
+	}
+	
+	public static void throwDices() {
+		int valueOfThrow=(int) Math.floor(Math.random()*6+1);
+		System.out.println("The player has thrown the dice and it gets "+valueOfThrow);
 	}
 }

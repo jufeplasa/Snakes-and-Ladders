@@ -1,10 +1,14 @@
 package model;
 
 public class Player {
+	
 	private String token;
 	private int position;
 	private int attempts;
+	
+	
 	private Player next;
+	private Player previous;
 	
 	public Player(String token) {
 		this.token = token;
@@ -39,6 +43,14 @@ public class Player {
 
 	public void addAttempts() {
 		attempts++;
+	}
+
+	public Player getPrevious() {
+		return previous;
+	}
+
+	public void setPrevious(Player previous) {
+		this.previous = previous;
 	}
 	
 }
