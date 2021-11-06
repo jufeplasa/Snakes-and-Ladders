@@ -80,12 +80,12 @@ public class Game {
 	}
 
 	public void createRow(int i, int j, Square firstRow) {
-		createColum(i ,j+1,firstRow,firstRow.getUp());
+		createColum(i ,j+1,firstRow,firstRow.getDown());
 		if(i+1<numRows) {
-			Square downSquare=new Square(i+1,j);
-			firstRow.setDown(downSquare);
-			downSquare.setUp(firstRow);
-			createRow(i+1,j,downSquare);
+			Square upSquare = new Square(i+1,j);
+			firstRow.setUp(upSquare);
+			upSquare.setDown(firstRow);
+			createRow(i+1,j,upSquare);
 		}
 	}
 
@@ -98,8 +98,8 @@ public class Game {
 
 			if(rowPrev!=null) {
 				rowPrev=rowPrev.getNext();
-				current.setUp(rowPrev);
-				rowPrev.setDown(current);
+				current.setDown(rowPrev);
+				rowPrev.setUp(current);
 			}
 
 			createColum(i,j+1,current, rowPrev );
@@ -116,7 +116,7 @@ public class Game {
 		String message="";
 		if(firstRow!=null) {
 			message=showColumn(firstRow)+"\n";
-			message+=showRow(firstRow.getDown());
+			message+=showRow(firstRow.getUp());
 		}
 		return message;
 	}
