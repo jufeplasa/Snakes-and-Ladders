@@ -39,7 +39,7 @@ public class Main {
 			switch(choose) {
 
 			case 1:
-				throwDices();
+				System.out.println(board.move(throwDices()));
 				if(board.endGame()) {
 					
 				}
@@ -114,8 +114,9 @@ public class Main {
 		return playerToken;
 	}
 	
-	public static void throwDices() {
+	public static int throwDices() {
 		int valueOfThrow=(int) Math.floor(Math.random()*6+1);
 		System.out.println("The player has thrown the dice and it gets "+valueOfThrow);
+		return valueOfThrow;
 	}
 }

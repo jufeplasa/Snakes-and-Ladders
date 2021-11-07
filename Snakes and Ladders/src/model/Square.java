@@ -19,6 +19,10 @@ public class Square {
 		
 	}
 	
+	public int getPosition() {
+		return position;
+	}
+	
 	public int getRows() {
 		return rows;
 	}
