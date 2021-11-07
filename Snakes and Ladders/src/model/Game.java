@@ -7,13 +7,16 @@ public class Game {
 	private Player tail;
 	private Player currentPlayer;
 	private Square firstSquare;
+	private Square lastSquare;
+	
+	
 
 	private int numRows;
 	private int numColums;
 	public Game(int n, int m) {
 		numRows=n;
 		numColums=m;
-		
+			
 	}
 
 	public Player getFirstPlayer() {
@@ -28,11 +31,19 @@ public class Game {
 
 		return firstSquare;
 	}
+	
+	public Square getLastSquare() {
+		return lastSquare;
+	}
+
+	public void setLastSquare(Square lastSquare) {
+		this.lastSquare = lastSquare;
+	}
 
 	public void addPlayer(String[] token, int i) {
 		if(i<token.length) {
 			System.out.println("va a agregar la ficha: "+token[i]);
-			Player newPlayer = new Player(token[i]);
+			Player newPlayer = new Player(token[i], firstSquare);
 			createPlayer(newPlayer, firstPlayer);
 			addPlayer(token, i+1);
 		}
@@ -75,60 +86,60 @@ public class Game {
 	}
 
 	public void createSquares() {
-		firstSquare= new Square(0,0);
-		createRow(0,0,firstSquare);
+		firstSquare= new Square(0,0,1);
+		createRow(0,0,firstSquare,1);
 	}
 
-	public void createRow(int i, int j, Square firstRow) {
-		createColum(i ,j+1,firstRow,firstRow.getDown());
-		if(i+1<numRows) {
-			Square upSquare = new Square(i+1,j);
-			firstRow.setUp(upSquare);
-			upSquare.setDown(firstRow);
-			createRow(i+1,j,upSquare);
-		}
-	}
+	public void createRow(int i, int j, Square firstRow, int p) {
+		createColum(i ,j+1,firstRow,firstRow.getUp(), p); 
+		if(i+1<numRows) { 
+			Square downSquare=new Square(i+1,j,p+numColums); 
+			firstRow.setDown(downSquare); 
+			downSquare.setUp(firstRow); 
+			createRow(i+1,j,downSquare,p+numColums); 
+		} 
+	} 
 
-	public void createColum(int i, int j, Square prev, Square rowPrev) {
-		if(j<numColums) {
-			Square current=new Square(i,j);
-			current.setPrevious(prev);
-			prev.setNext(current);
+	public void createColum(int i, int j, Square prev, Square rowPrev, int p) { 
+		if(j<numColums) { 
+			Square current=new Square(i,j,p+1); 
+			current.setPrevious(prev); 
+			prev.setNext(current); 
+ 
+ 
+			if(rowPrev!=null) { 
+				rowPrev=rowPrev.getNext(); 
+				current.setUp(rowPrev); 
+				rowPrev.setDown(current); 
+			} 
+ 
+			createColum(i,j+1,current, rowPrev,p+1); 
+		} 
+	} 
 
-
-			if(rowPrev!=null) {
-				rowPrev=rowPrev.getNext();
-				current.setDown(rowPrev);
-				rowPrev.setUp(current);
-			}
-
-			createColum(i,j+1,current, rowPrev );
-		}
-	}
-
-	public String showBoard() {
-		String message="";
-		message=showRow(firstSquare);
-		return message;
-	}
-
-	public String showRow(Square firstRow) {
-		String message="";
-		if(firstRow!=null) {
-			message=showColumn(firstRow)+"\n";
-			message+=showRow(firstRow.getUp());
-		}
-		return message;
-	}
-
-	private String showColumn(Square current) {
-		String message="";
-		if(current!=null) {
-			message=current.toString();
-			message+=showColumn(current.getNext());
-		}
-		return message;
-	}
+	public String showBoard() { 
+		String message=""; 
+		message=showRow(firstSquare); 
+		return message; 
+	} 
+ 
+	public String showRow(Square firstRow) { 
+		String message=""; 
+		if(firstRow!=null) { 
+			message=showColumn(firstRow)+"\n"; 
+			message+=showRow(firstRow.getDown()); 
+		} 
+		return message; 
+	} 
+ 
+	private String showColumn(Square current) { 
+		String message=""; 
+		if(current!=null) { 
+			message=current.toString(); 
+			message+=showColumn(current.getNext()); 
+		} 
+		return message; 
+	} 
 
 	public boolean endGame() {
 		return false;

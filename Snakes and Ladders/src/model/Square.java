@@ -9,10 +9,13 @@ public class Square {
 	private Square up;
 	private Square down;
 	private Square previous;
+	private int position;
 
-	public Square(int n, int m) {
+	public Square(int n, int m, int p) {
 		rows=n;
 		columns=m;
+		position = p;
+		
 		
 	}
 	
@@ -50,8 +53,9 @@ public class Square {
 		this.previous = previous;
 	}
 	
+	
 	public String toString() {
-		return "["+rows+","+columns+"]";
+		return "["+position+"]";
 	}
 	
 }

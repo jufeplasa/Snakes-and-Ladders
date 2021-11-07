@@ -3,17 +3,17 @@ package model;
 public class Player {
 	
 	private String token;
-	private int position;
+	private Square position;
 	private int attempts;
 	
 	
 	private Player next;
 	private Player previous;
 	
-	public Player(String token) {
+	public Player(String token, Square p) {
 		this.token = token;
 		attempts=0;
-		position = 1;
+		position = p;
 	}
 	
 	public String getToken() {
@@ -22,10 +22,10 @@ public class Player {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	public int getPosition() {
+	public Square getPosition() {
 		return position;
 	}
-	public void setPosition(int position) {
+	public void setPosition(Square position) {
 		this.position = position;
 	}
 
