@@ -90,7 +90,7 @@ public class Square {
 		}
 	}
 
-	public Player getToken() {
+	public Player getFirstToken() {
 		return firstToken;
 	}
 
@@ -115,19 +115,28 @@ public class Square {
 
 	public void remove(String token, Player aux) {
 		Player removed=null;
-		Player prev=aux;
-		Player current=aux.getNextToken();
-		if(current!=null) {
-			if(current.getToken().equalsIgnoreCase(token)) {
-				removed=current;
-				prev.setNextToken(current.getNextToken());
-				removed.setNextToken(null);
-			}
-			else {
-				prev=current;
-				current=prev.getNextToken();
+	
+		if(token.equalsIgnoreCase(firstToken.getToken())) {
+			removed=firstToken;
+			firstToken=firstToken.getNextToken();
+			removed.setNextToken(null);
+		}
+		else {
+			Player prev=aux;
+			Player current=aux.getNextToken();
+			if(current!=null) {
+				if(current.getToken().equalsIgnoreCase(token)) {
+					removed=current;
+					prev.setNextToken(current.getNextToken());
+					removed.setNextToken(null);
+				}
+				else {
+					prev=current;
+					remove(token,prev);
+				}
 			}
 		}
+		
 	}
 
 public String printTokens(Player newToken) {
@@ -149,6 +158,9 @@ public String showSquare() {
 	}
 	else if(snake!=0) {
 		return "["+snake+" "+tokens+"]";
+	}
+	else if (tokens!= null) {
+		return "[ "+tokens+"]";
 	}
 	else {
 		return "["+position+"]";

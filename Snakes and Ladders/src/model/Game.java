@@ -54,6 +54,7 @@ public class Game {
 		if(i<token.length) {
 			System.out.println("va a agregar la ficha: "+token[i]);
 			Player newPlayer = new Player(token[i], firstSquare);
+			firstSquare.addToken(newPlayer, firstSquare.getFirstToken());
 			createPlayer(newPlayer, firstPlayer);
 			addPlayer(token, i+1);
 		}
@@ -235,7 +236,8 @@ public class Game {
 	}
 
 	public String move(int step) {
-		currentPlayer.getPosition().remove(currentPlayer.getToken(), firstPlayer);
+		Square auxPosition=currentPlayer.getPosition();
+		currentPlayer.getPosition().remove(currentPlayer.getToken(),auxPosition.getFirstToken() );
 		int value=step+currentPlayer.getPosition().getPosition();
 		if(value>=(numColums*numRows)) {
 			value=numColums*numRows;
@@ -281,7 +283,7 @@ public class Game {
 	public void createLadders(int ladder) {
 		if(ladder>0) {
 			int max=numColums*numRows;
-			int tail=(int) Math.floor(Math.random()*(max)+numColums);
+			int tail=(int) Math.floor(Math.random()*(max)+1);
 			int head=(int) Math.floor(Math.random()*(tail-numColums)+2);
 			System.out.println("valores "+tail+" cabeza: "+head);
 			Square tailLadder=findSquare(tail, firstSquare);
