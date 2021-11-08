@@ -300,6 +300,7 @@ public class Game {
 	}
 	
 	public void createSnakes(int snake) {
+
 		if(snake>0) {
 			int max=numColums*numRows;
 			int head=(int) Math.floor(Math.random()*(max-1)+numColums);
@@ -318,4 +319,39 @@ public class Game {
 		}
 	}
 
+	public String checkSnakeandLadder() {
+		return "";
+	}
+	
+	public Square findLadder(int num,Square auxSquare) {
+		Square findSquare; 
+		findSquare=findLadderRow(num,auxSquare); 
+		return findSquare; 
+	}
+
+	public Square findLadderRow(int ladder, Square auxSquare) {
+		Square findSquare=null; 
+		if(auxSquare!=null) { 
+			findSquare=findLadderColum(ladder, auxSquare);
+			if(findSquare==null) {
+				findSquare=findLadderRow(ladder, auxSquare.getDown());
+			}
+		} 
+		return findSquare; 
+	}
+
+	public Square findLadderColum(int ladder, Square auxSquare) {
+		Square findSquare=null; 
+		if(auxSquare!=null) { 
+			if(  auxSquare.getLadder()==ladder) {
+				findSquare=auxSquare;
+			}
+			else {
+				findSquare=findColum(ladder, auxSquare.getNext());
+			}
+		}
+		return findSquare;
+	}
+	
+	
 }

@@ -42,6 +42,8 @@ public class Main {
 			case 1:
 				System.out.println(board.move(throwDices()));
 				System.out.println(board.showCurrentBoard());
+				System.out.println(board.checkSnakeandLadder());
+				System.out.println(board.showCurrentBoard());
 				if(board.endGame()) {
 					System.out.println("The player "+board.getCurrentPlayer().getToken()+" has win the game, with "+board.getCurrentPlayer().getAttempts()+" attemps");
 					System.out.println("CONGRATULATIONS!!!");
