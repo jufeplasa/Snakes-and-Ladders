@@ -1,10 +1,12 @@
 package model;
 
 public class Square {
-	
+
 	private int rows;
 	private int columns;
-	
+	private int ladder;
+	private char snake;
+
 	private Square next;
 	private Square up;
 	private Square down;
@@ -15,14 +17,32 @@ public class Square {
 		rows=n;
 		columns=m;
 		position = p;
-		
-		
+
+		ladder=0;
+		snake=0;
 	}
-	
+
+	public int getLadder() {
+		return ladder;
+	}
+
+	public void setLadder(int ladder) {
+		this.ladder = ladder;
+	}
+
+	public char getSnake() {
+		return snake;
+	}
+
+	public void setSnake(char snake) {
+		this.snake = snake;
+	}
+
+
 	public int getPosition() {
 		return position;
 	}
-	
+
 	public int getRows() {
 		return rows;
 	}
@@ -56,10 +76,18 @@ public class Square {
 	public void setPrevious(Square previous) {
 		this.previous = previous;
 	}
-	
-	
+
+
 	public String toString() {
-		return "["+position+"]";
+		if(ladder!=0) {
+			return "["+position+" "+ladder+"]";
+		}
+		else if(snake!=0) {
+			return "["+position+" "+snake+"]";
+		}
+		else {
+			return "["+position+"]";
+		}
 	}
-	
+
 }

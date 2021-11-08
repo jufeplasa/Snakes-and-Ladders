@@ -22,6 +22,7 @@ public class Main {
 
 			case 1:
 				enterValues();
+				board.setLastSquare();
 				conti=false;
 				gameMenu=true;
 				break;
@@ -41,7 +42,9 @@ public class Main {
 			case 1:
 				System.out.println(board.move(throwDices()));
 				if(board.endGame()) {
-					
+					System.out.println("The player "+board.getCurrentPlayer().getToken()+" has win the game, with "+board.getCurrentPlayer().getAttempts()+" attemps");
+					System.out.println("CONGRATULATIONS!!!");
+					gameMenu=false;
 				}
 				else {
 					board.nextTurn();
@@ -96,6 +99,8 @@ public class Main {
 		token= part[4].split("");
 		board=new Game(Integer.parseInt(part[0]),Integer.parseInt(part[1]));
 		board.createSquares();
+		board.createLadders(Integer.parseInt(part[3]));
+		board.createSnakes(Integer.parseInt(part[2]));
 		board.addPlayer(token,0);
 	}
 	

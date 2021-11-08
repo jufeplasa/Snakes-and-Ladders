@@ -37,8 +37,17 @@ public class Game {
 		return lastSquare;
 	}
 
-	public void setLastSquare(Square lastSquare) {
-		this.lastSquare = lastSquare;
+	public void setLastSquare() {
+		int max=numColums*numRows;
+		lastSquare =findSquare(max,firstSquare);
+	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	public void nextTurn() {
+		currentPlayer = currentPlayer.getNext();
 	}
 
 	public void addPlayer(String[] token, int i) {
@@ -136,15 +145,14 @@ public class Game {
 			}
 			else if(i%2!=0) {
 				Square current=new Square(i,j,p-1); 
-				lastSquare=current;
 				current.setPrevious(prev); 
 				prev.setNext(current); 
 
 
 				if(rowPrev!=null) { 
 					rowPrev=rowPrev.getNext(); 
-					lastSquare.setUp(rowPrev); 
-					rowPrev.setDown(lastSquare); 
+					current.setUp(rowPrev); 
+					rowPrev.setDown(current); 
 				} 
 
 				createColum(i,j+1,current, rowPrev,p-1);
@@ -172,44 +180,107 @@ public class Game {
 	private String showColumn(Square current) { 
 		String message=""; 
 		if(current!=null) { 
-			message=current.toString(); 
-			message+=showColumn(current.getPrevious()); 
+			if(numRows%2==0) {
+				message=current.toString(); 
+				message+=showColumn(current.getNext()); 
+			}
+			else {
+				message=current.toString(); 
+				message+=showColumn(current.getPrevious()); 
+			}
 		}
 		return message; 
 	} 
 
 	public boolean endGame() {
-		return false;
+		int max=numColums*numRows;
+		if(currentPlayer.getPosition().getPosition()==max) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public String move(int step) {
 		int value=step+currentPlayer.getPosition().getPosition();
+		if(value>=(numColums*numRows)) {
+			value=numColums*numRows;
+		}
 		Square nextSquare=findSquare(value,firstSquare);
-		System.out.println(" valor de destino "+nextSquare.getPosition());
 		currentPlayer.setPosition(nextSquare);
+		currentPlayer.addAttempts();
+
 		String message="El jugador esta en la casilla "+currentPlayer.getPosition().getPosition();
 		return message;
 	}
 
-	public Square findSquare(int num,Square findSquare) {
-		int max=numColums*numRows;
-		boolean find=false;
-		if(num>=max) {
-			return lastSquare;
+	public Square findSquare(int num,Square auxSquare) {
+		Square findSquare; 
+		findSquare=findRow(num,auxSquare); 
+		return findSquare; 
+	}
+
+	public Square findRow(int step, Square auxSquare) {
+		Square findSquare=null; 
+		if(auxSquare!=null) { 
+			findSquare=findColum(step, auxSquare);
+			if(findSquare==null) {
+				findSquare=findRow(step, auxSquare.getDown());
+			}
+		} 
+		return findSquare; 
+	}
+
+	public Square findColum(int step, Square auxSquare) {
+		Square findSquare=null; 
+		if(auxSquare!=null) { 
+			if(  auxSquare.getPosition()==step) {
+				findSquare=auxSquare;
+			}
+			else {
+				findSquare=findColum(step, auxSquare.getNext());
+			}
 		}
-		else if(findSquare.getPosition()==num) {
-			return findSquare;
+		return findSquare;
+	}
+
+	public void createLadders(int ladder) {
+		if(ladder>0) {
+			int max=numColums*numRows;
+			int tail=(int) Math.floor(Math.random()*(max)+numColums);
+			int head=(int) Math.floor(Math.random()*(tail-numColums)+2);
+			System.out.println("valores "+tail+" cabeza: "+head);
+			Square tailLadder=findSquare(tail, firstSquare);
+			Square headLadder=findSquare(head, firstSquare);
+			if(tailLadder.getLadder()==0 && headLadder.getLadder()==0) {
+				tailLadder.setLadder(ladder);
+				headLadder.setLadder(ladder);
+				createLadders(ladder-1);
+			}
+			else {
+				createLadders(ladder);
+			}
 		}
-		else {
-			return findSquare(num,findSquare.getNext());
+	}
+	
+	public void createSnakes(int snake) {
+		if(snake>0) {
+			int max=numColums*numRows;
+			int head=(int) Math.floor(Math.random()*(max-1)+numColums);
+			int tail=(int) Math.floor(Math.random()*(head-numColums)+1);
+			System.out.println("valores cola snake "+tail+" cabeza snake : "+head);
+			Square tailLadder=findSquare(tail, firstSquare);
+			Square headLadder=findSquare(head, firstSquare);
+			if(tailLadder.getLadder()==0 && headLadder.getLadder()==0 && tailLadder.getSnake()==0 && headLadder.getSnake()==0) {
+				tailLadder.setSnake((char) (64+snake));
+				headLadder.setSnake((char) (64+snake));
+				createSnakes(snake-1);
+			}
+			else {
+				createSnakes(snake);
+			}
 		}
 	}
 
-	public Player getCurrentPlayer() {
-		return currentPlayer;
-	}
-
-	public void nextTurn() {
-		currentPlayer = currentPlayer.getNext();
-	}
 }

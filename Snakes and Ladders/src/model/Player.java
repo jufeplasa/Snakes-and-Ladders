@@ -19,9 +19,7 @@ public class Player {
 	public String getToken() {
 		return token;
 	}
-	public void setToken(String token) {
-		this.token = token;
-	}
+	
 	public Square getPosition() {
 		return position;
 	}
