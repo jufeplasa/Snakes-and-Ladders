@@ -191,6 +191,38 @@ public class Game {
 		}
 		return message; 
 	} 
+	
+
+	public String showCurrentBoard() { 
+		String message=""; 
+		message=showCurrentRow(lastSquare); 
+		return message; 
+	} 
+
+	public String showCurrentRow(Square lastRow) { 
+		String message=""; 
+		if(lastRow!=null) { 
+			message=showCurrentColumn(lastRow)+"\n"; 
+			message+=showCurrentRow(lastRow.getUp()); 
+		} 
+		return message; 
+	} 
+
+	private String showCurrentColumn(Square current) { 
+		String message=""; 
+		if(current!=null) { 
+			if(numRows%2==0) {
+				message=current.showSquare(); 
+				message+=showCurrentColumn(current.getNext()); 
+			}
+			else {
+				message=current.showSquare(); 
+				message+=showCurrentColumn(current.getPrevious()); 
+			}
+		}
+		return message; 
+	} 
+
 
 	public boolean endGame() {
 		int max=numColums*numRows;
@@ -203,6 +235,7 @@ public class Game {
 	}
 
 	public String move(int step) {
+		currentPlayer.getPosition().remove(currentPlayer.getToken(), firstPlayer);
 		int value=step+currentPlayer.getPosition().getPosition();
 		if(value>=(numColums*numRows)) {
 			value=numColums*numRows;
@@ -210,7 +243,7 @@ public class Game {
 		Square nextSquare=findSquare(value,firstSquare);
 		currentPlayer.setPosition(nextSquare);
 		currentPlayer.addAttempts();
-
+		nextSquare.addToken(currentPlayer, firstPlayer);
 		String message="El jugador esta en la casilla "+currentPlayer.getPosition().getPosition();
 		return message;
 	}

@@ -9,6 +9,7 @@ public class Player {
 	
 	private Player next;
 	private Player previous;
+	private Player nextToken;
 	
 	public Player(String token, Square p) {
 		this.token = token;
@@ -49,6 +50,18 @@ public class Player {
 
 	public void setPrevious(Player previous) {
 		this.previous = previous;
+	}
+
+	public Player getNextToken() {
+		return nextToken;
+	}
+
+	public void setNextToken(Player nextToken) {
+		this.nextToken = nextToken;
+	}
+	
+	public String toString() {
+		return token;
 	}
 	
 }

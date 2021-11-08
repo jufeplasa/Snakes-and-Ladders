@@ -5,13 +5,14 @@ public class Square {
 	private int rows;
 	private int columns;
 	private int ladder;
+	private int position;
 	private char snake;
 
 	private Square next;
 	private Square up;
 	private Square down;
 	private Square previous;
-	private int position;
+	private Player firstToken;
 
 	public Square(int n, int m, int p) {
 		rows=n;
@@ -77,7 +78,6 @@ public class Square {
 		this.previous = previous;
 	}
 
-
 	public String toString() {
 		if(ladder!=0) {
 			return "["+position+" "+ladder+"]";
@@ -89,5 +89,71 @@ public class Square {
 			return "["+position+"]";
 		}
 	}
+
+	public Player getToken() {
+		return firstToken;
+	}
+
+	public void setToken(Player token) {
+		this.firstToken = token;
+	}
+
+	public void addToken(Player newToken, Player aux) {
+		if(firstToken == null) {
+			firstToken= newToken;
+		}
+		else {
+			Player last =aux;
+			if(last.getNextToken()!=null) {
+				addToken(newToken, aux.getNextToken());
+			}
+			else {
+				last.setNextToken(newToken);
+			}
+		}
+	}
+
+	public void remove(String token, Player aux) {
+		Player removed=null;
+		Player prev=aux;
+		Player current=aux.getNextToken();
+		if(current!=null) {
+			if(current.getToken().equalsIgnoreCase(token)) {
+				removed=current;
+				prev.setNextToken(current.getNextToken());
+				removed.setNextToken(null);
+			}
+			else {
+				prev=current;
+				current=prev.getNextToken();
+			}
+		}
+	}
+
+public String printTokens(Player newToken) {
+	Player current = newToken;
+	String message="";
+	if(current!=null) {
+		message+=current.toString();
+		if(current.getNextToken()!=null) {
+			message+=printTokens(current.getNextToken());
+		}
+	}
+	return message;
+}
+
+public String showSquare() {
+	String tokens=printTokens(firstToken);
+	if(ladder!=0) {
+		return "["+ladder+" "+tokens+"]";
+	}
+	else if(snake!=0) {
+		return "["+snake+" "+tokens+"]";
+	}
+	else {
+		return "["+position+"]";
+	}
+
+}
 
 }
