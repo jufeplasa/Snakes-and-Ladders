@@ -52,7 +52,6 @@ public class Game {
 
 	public void addPlayer(String[] token, int i) {
 		if(i<token.length) {
-			System.out.println("va a agregar la ficha: "+token[i]);
 			Player newPlayer = new Player(token[i], firstSquare);
 			firstSquare.addToken(newPlayer, firstSquare.getFirstToken());
 			createPlayer(newPlayer, firstPlayer);
@@ -245,8 +244,8 @@ public class Game {
 		Square nextSquare=findSquare(value,firstSquare);
 		currentPlayer.setPosition(nextSquare);
 		currentPlayer.addAttempts();
-		nextSquare.addToken(currentPlayer, firstPlayer);
-		String message="El jugador esta en la casilla "+currentPlayer.getPosition().getPosition();
+		nextSquare.addToken(currentPlayer, nextSquare.getFirstToken());
+		String message="The player is in the Square "+currentPlayer.getPosition().getPosition();
 		return message;
 	}
 
@@ -283,9 +282,16 @@ public class Game {
 	public void createLadders(int ladder) {
 		if(ladder>0) {
 			int max=numColums*numRows;
-			int tail=(int) Math.floor(Math.random()*(max)+1);
-			int head=(int) Math.floor(Math.random()*(tail-numColums)+2);
-			System.out.println("valores "+tail+" cabeza: "+head);
+			int min=numColums+1;
+			int tail=(int) Math.floor(Math.random()*(max-min)+min);
+			int maxHead;
+			if(tail>numColums) {
+				maxHead=tail-numColums;
+			}
+			else {
+				maxHead=tail-1;
+			}
+			int head=(int) Math.floor(Math.random()*(maxHead-2)+2);
 			Square tailLadder=findSquare(tail, firstSquare);
 			Square headLadder=findSquare(head, firstSquare);
 			if(tailLadder.getLadder()==0 && headLadder.getLadder()==0) {
@@ -302,10 +308,17 @@ public class Game {
 	public void createSnakes(int snake) {
 
 		if(snake>0) {
-			int max=numColums*numRows;
-			int head=(int) Math.floor(Math.random()*(max-1)+numColums);
-			int tail=(int) Math.floor(Math.random()*(head-numColums)+1);
-			System.out.println("valores cola snake "+tail+" cabeza snake : "+head);
+			int max=(numColums*numRows)-1;
+			int head=(int) Math.floor(Math.random()*(max-numColums)+numColums);
+			
+			int maxTail;
+			if(head>numColums) {
+				maxTail=head-numColums;
+			}
+			else {
+				maxTail=head-1;
+			}
+			int tail=(int) Math.floor(Math.random()*(maxTail-1)+1);
 			Square tailLadder=findSquare(tail, firstSquare);
 			Square headLadder=findSquare(head, firstSquare);
 			if(tailLadder.getLadder()==0 && headLadder.getLadder()==0 && tailLadder.getSnake()==0 && headLadder.getSnake()==0) {
@@ -320,12 +333,35 @@ public class Game {
 	}
 
 	public String checkSnakeandLadder() {
-		return "";
+		String message=null;
+		if(currentPlayer.getPosition().getLadder()!=0) {
+			Square current=currentPlayer.getPosition();
+			Square ladder= findLadder(current.getLadder(),firstSquare);
+			if(ladder.getPosition()>current.getPosition()) {
+				currentPlayer.getPosition().remove(currentPlayer.getToken(),current.getFirstToken() );
+				currentPlayer.setPosition(ladder);
+				currentPlayer.addAttempts();
+				ladder.addToken(currentPlayer, ladder.getFirstToken());
+				message="you found a ladder so you move along to "+ladder.getPosition()+" position";
+			}
+		}
+		else if(currentPlayer.getPosition().getSnake()!=0) {
+			Square current=currentPlayer.getPosition();
+			Square snake= findSnake(current.getSnake(),firstSquare);
+			if(snake.getPosition()<current.getPosition()) {
+				currentPlayer.getPosition().remove(currentPlayer.getToken(),current.getFirstToken() );
+				currentPlayer.setPosition(snake);
+				currentPlayer.addAttempts();
+				snake.addToken(currentPlayer, snake.getFirstToken());
+				message="OH OH you found a snake, so you come back to "+snake.getPosition()+" position";
+			}
+		}
+		return message;
 	}
 	
-	public Square findLadder(int num,Square auxSquare) {
+	public Square findLadder(int ladder,Square auxSquare) {
 		Square findSquare; 
-		findSquare=findLadderRow(num,auxSquare); 
+		findSquare=findLadderRow(ladder,auxSquare); 
 		return findSquare; 
 	}
 
@@ -343,11 +379,42 @@ public class Game {
 	public Square findLadderColum(int ladder, Square auxSquare) {
 		Square findSquare=null; 
 		if(auxSquare!=null) { 
-			if(  auxSquare.getLadder()==ladder) {
+			if(auxSquare!=currentPlayer.getPosition() && auxSquare.getLadder()==ladder) {
 				findSquare=auxSquare;
 			}
 			else {
-				findSquare=findColum(ladder, auxSquare.getNext());
+				findSquare=findLadderColum(ladder, auxSquare.getNext());
+			}
+		}
+		return findSquare;
+	}
+	
+	
+	public Square findSnake(char snake,Square auxSquare) {
+		Square findSquare; 
+		findSquare=findSnakeRow(snake,auxSquare); 
+		return findSquare; 
+	}
+	
+	public Square findSnakeRow(char snake, Square auxSquare) {
+		Square findSquare=null; 
+		if(auxSquare!=null) { 
+			findSquare=findSnakeColum(snake, auxSquare);
+			if(findSquare==null) {
+				findSquare=findSnakeRow(snake, auxSquare.getDown());
+			}
+		} 
+		return findSquare; 
+	}
+	
+	public Square findSnakeColum(char snake, Square auxSquare) {
+		Square findSquare=null; 
+		if(auxSquare!=null  ) { 
+			if( auxSquare!=currentPlayer.getPosition()&& auxSquare.getSnake()==snake) {
+				findSquare=auxSquare;
+			}
+			else {
+				findSquare=findSnakeColum(snake, auxSquare.getNext());
 			}
 		}
 		return findSquare;

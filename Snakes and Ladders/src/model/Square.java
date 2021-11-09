@@ -160,7 +160,7 @@ public String showSquare() {
 		return "["+snake+" "+tokens+"]";
 	}
 	else if (tokens!= null) {
-		return "[ "+tokens+"]";
+		return "["+tokens+"]";
 	}
 	else {
 		return "["+position+"]";
