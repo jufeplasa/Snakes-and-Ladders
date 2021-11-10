@@ -49,7 +49,7 @@ public class Game {
 	public void nextTurn() {
 		currentPlayer = currentPlayer.getNext();
 	}
-	
+
 	public void addPlayer(String[] token, int i) {
 		if(i<token.length) {
 			Player newPlayer = new Player(token[i], firstSquare);
@@ -164,7 +164,14 @@ public class Game {
 
 	public String showBoard() { 
 		String message=""; 
-		message=showRow(lastSquare); 
+		if(numRows%2==0) {
+			message=showRow(lastSquare);
+		}
+		else {
+			int auxPosition=(numRows*numColums)-(numColums-1);
+			Square auxSquare=findSquare(auxPosition, firstSquare);
+			message=showRow(auxSquare);
+		}
 		return message; 
 	} 
 
@@ -180,22 +187,24 @@ public class Game {
 	private String showColumn(Square current) { 
 		String message=""; 
 		if(current!=null) { 
-			if(numRows%2==0) {
-				message=current.toString(); 
-				message+=showColumn(current.getNext()); 
-			}
-			else {
-				message=current.toString(); 
-				message+=showColumn(current.getPrevious()); 
-			}
+			message=current.toString(); 
+			message+=showColumn(current.getNext()); 
+
 		}
 		return message; 
 	} 
-	
+
 
 	public String showCurrentBoard() { 
 		String message=""; 
-		message=showCurrentRow(lastSquare); 
+		if(numRows%2==0) {
+			message=showCurrentRow(lastSquare);
+		}
+		else {
+			int auxPosition=(numRows*numColums)-(numColums-1);
+			Square auxSquare=findSquare(auxPosition, firstSquare);
+			message=showCurrentRow(auxSquare);
+		} 
 		return message; 
 	} 
 
@@ -210,15 +219,10 @@ public class Game {
 
 	private String showCurrentColumn(Square current) { 
 		String message=""; 
-		if(current!=null) { 
-			if(numRows%2==0) {
-				message=current.showSquare(); 
-				message+=showCurrentColumn(current.getNext()); 
-			}
-			else {
-				message=current.showSquare(); 
-				message+=showCurrentColumn(current.getPrevious()); 
-			}
+		if(current!=null) {
+			message=current.showSquare(); 
+			message+=showCurrentColumn(current.getNext()); 
+
 		}
 		return message; 
 	} 
@@ -294,7 +298,7 @@ public class Game {
 			int head=(int) Math.floor(Math.random()*(maxHead-2)+2);
 			Square tailLadder=findSquare(tail, firstSquare);
 			Square headLadder=findSquare(head, firstSquare);
-			if(tailLadder.getLadder()==0 && headLadder.getLadder()==0) {
+			if(tailLadder.getLadder()==0 && headLadder.getLadder()==0 && tailLadder.getSnake()==0 && headLadder.getSnake()==0) {
 				tailLadder.setLadder(ladder);
 				headLadder.setLadder(ladder);
 				createLadders(ladder-1);
@@ -304,14 +308,14 @@ public class Game {
 			}
 		}
 	}
-	
+
 	public void createSnakes(int snake) {
 
 		if(snake>0) {
 			int max=(numColums*numRows)-1;
 			int min=numColums+1;
 			int head=(int) Math.floor(Math.random()*(max-min)+min);
-			
+
 			int maxTail;
 			if(head>numColums) {
 				maxTail=head-numColums;
@@ -359,7 +363,7 @@ public class Game {
 		}
 		return message;
 	}
-	
+
 	public Square findLadder(int ladder,Square auxSquare) {
 		Square findSquare; 
 		findSquare=findLadderRow(ladder,auxSquare); 
@@ -389,14 +393,14 @@ public class Game {
 		}
 		return findSquare;
 	}
-	
-	
+
+
 	public Square findSnake(char snake,Square auxSquare) {
 		Square findSquare; 
 		findSquare=findSnakeRow(snake,auxSquare); 
 		return findSquare; 
 	}
-	
+
 	public Square findSnakeRow(char snake, Square auxSquare) {
 		Square findSquare=null; 
 		if(auxSquare!=null) { 
@@ -407,7 +411,7 @@ public class Game {
 		} 
 		return findSquare; 
 	}
-	
+
 	public Square findSnakeColum(char snake, Square auxSquare) {
 		Square findSquare=null; 
 		if(auxSquare!=null  ) { 
@@ -420,6 +424,6 @@ public class Game {
 		}
 		return findSquare;
 	}
-	
-	
+
+
 }

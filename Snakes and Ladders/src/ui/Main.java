@@ -14,9 +14,13 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		
 		sc=new Scanner(System.in);
-		boolean conti=true;
-		boolean gameMenu=false;
-		while(conti) {
+		menu(true);
+		menu2(true);
+	}
+	
+	public static void menu(boolean conti) throws IOException {
+		
+		if(conti) {
 			int choose=showMenu();
 			switch(choose) {
 
@@ -24,8 +28,8 @@ public class Main {
 				enterValues();
 				board.setLastSquare();
 				conti=false;
-				gameMenu=true;
 				System.out.println(board.showBoard());
+				
 				break;
 				
 			case 2:
@@ -35,8 +39,10 @@ public class Main {
 			}
 		}
 		
-		
-		while(gameMenu) {
+	}
+	
+	public static void menu2(boolean conti) {
+		if(conti) {
 			String choose=showMenu2();
 			switch(choose) {
 
@@ -51,25 +57,26 @@ public class Main {
 				if(board.endGame()) {
 					System.out.println("The player "+board.getCurrentPlayer().getToken()+" has win the game, with "+board.getCurrentPlayer().getAttempts()+" attemps");
 					System.out.println("CONGRATULATIONS!!!");
-					gameMenu=false;
+					menu2(false);
 				}
 				else {
 					board.nextTurn();
+					menu2(true);
 				}
 				
 				break;
 				
 			case "num":
 				System.out.println(board.showBoard());
+				menu2(true);
 				break;
 				
 			case "menu":
 				showMenu();
+				menu2(true);
 				break;
 			}
-		
 		}
-		
 	}
 
 	public static int showMenu() {
@@ -86,7 +93,7 @@ public class Main {
 	public static String showMenu2() {
 		String option="";
 		System.out.println("It's turn to player: "+showPlayerTurn()+"\nWhat do you want to do?");
-		System.out.println("\nPress enter to keep playing or write:");
+		System.out.println("\nPress enter to keep playing ");
 		System.out.println("num: Show the board game ");
 		System.out.println("menu: Show the board game ");
 		option=sc.nextLine();
@@ -105,8 +112,8 @@ public class Main {
 		token= part[4].split("");
 		board=new Game(Integer.parseInt(part[0]),Integer.parseInt(part[1]));
 		board.createSquares();
-		board.createLadders(Integer.parseInt(part[3]));
 		board.createSnakes(Integer.parseInt(part[2]));
+		board.createLadders(Integer.parseInt(part[3]));
 		board.addPlayer(token,0);
 	}
 	

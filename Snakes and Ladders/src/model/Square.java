@@ -77,14 +77,21 @@ public class Square {
 	public void setPrevious(Square previous) {
 		this.previous = previous;
 	}
+	
+	public int cifras(int num) {
+		int cifra=0;
+		if(num!=0) {
+			num=num/10;
+			cifra++;
+			cifra+=cifras(num);
+		}
+		return cifra;
+	}
 
 	public String toString() {
-		int n = position;
-		int cifras = 0;
-		while(n!=0) {
-			n=n/10;
-			cifras++;				
-		}
+		
+		int cifras = cifras(position);
+		
 		if(ladder!=0) {			
 			if(cifras>=2) {
 				return "["+position+""+ladder+"]";}
