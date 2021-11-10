@@ -25,21 +25,22 @@ public class Main {
 				board.setLastSquare();
 				conti=false;
 				gameMenu=true;
+				System.out.println(board.showBoard());
 				break;
 				
 			case 2:
 				conti=false;
-				System.out.println("You have exited of the game.");
+				System.out.println("You have exit of the game.");
 				break;
 			}
 		}
 		
 		
 		while(gameMenu) {
-			int choose=showMenu2();
+			String choose=showMenu2();
 			switch(choose) {
 
-			case 1:
+			case "":
 				System.out.println(board.move(throwDices()));
 				System.out.println(board.showCurrentBoard());
 				String changeSquare=board.checkSnakeandLadder();
@@ -58,14 +59,15 @@ public class Main {
 				
 				break;
 				
-			case 2:
+			case "num":
 				System.out.println(board.showBoard());
 				break;
 				
-			case 3:
-				showPlayers(board.getFirstPlayer());
+			case "menu":
+				showMenu();
 				break;
 			}
+		
 		}
 		
 	}
@@ -81,15 +83,13 @@ public class Main {
 	}
 	
 	
-	public static int showMenu2() {
-		int option;
+	public static String showMenu2() {
+		String option="";
 		System.out.println("It's turn to player: "+showPlayerTurn()+"\nWhat do you want to do?");
-		System.out.println("1: Throw the dices");
-		System.out.println("2: Show the board game ");
-		System.out.println("3: Show the players ");
-		
-		option=sc.nextInt();
-		sc.nextLine();
+		System.out.println("\nPress enter to keep playing or write:");
+		System.out.println("num: Show the board game ");
+		System.out.println("menu: Show the board game ");
+		option=sc.nextLine();
 		return option;
 	}
 		

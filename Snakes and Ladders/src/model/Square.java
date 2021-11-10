@@ -79,14 +79,29 @@ public class Square {
 	}
 
 	public String toString() {
-		if(ladder!=0) {
-			return "["+position+" "+ladder+"]";
+		int n = position;
+		int cifras = 0;
+		while(n!=0) {
+			n=n/10;
+			cifras++;				
+		}
+		if(ladder!=0) {			
+			if(cifras>=2) {
+				return "["+position+""+ladder+"]";}
+			else {return "[ "+position+""+ladder+"]";}
+
 		}
 		else if(snake!=0) {
-			return "["+position+" "+snake+"]";
+			if(cifras>=2) {
+			return "["+position+snake+"]";}
+			else{return "[ "+position+snake+"]";}
+			
 		}
 		else {
-			return "["+position+"]";
+			if(cifras>=2) {
+				return "["+position+" ]";}
+			else {return "[ "+position+" ]";}
+
 		}
 	}
 
@@ -154,18 +169,27 @@ public String printTokens(Player newToken) {
 public String showSquare() {
 	String tokens=printTokens(firstToken);
 	if(ladder!=0) {
-		return "["+ladder+" "+tokens+"]";
+		if(firstToken==null) {
+			return "["+ladder+"  ]";
+			
+		}else {
+		return "["+ladder+" "+tokens+"]";}
 	}
 	else if(snake!=0) {
-		return "["+snake+" "+tokens+"]";
+		if(firstToken==null) {
+			return "["+snake+"  ]";
+		}else {
+		return "["+snake+" "+tokens+"]";}
 	}
-	else if (tokens!= null) {
-		return "["+tokens+"]";
+	else if (tokens.equalsIgnoreCase("")) {
+		return "[   ]";
+		
 	}
 	else {
-		return "["+position+"]";
+		return "[ "+tokens+" ]";}
+		
 	}
 
 }
 
-}
+

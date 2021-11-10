@@ -49,7 +49,7 @@ public class Game {
 	public void nextTurn() {
 		currentPlayer = currentPlayer.getNext();
 	}
-
+	
 	public void addPlayer(String[] token, int i) {
 		if(i<token.length) {
 			Player newPlayer = new Player(token[i], firstSquare);
@@ -309,7 +309,8 @@ public class Game {
 
 		if(snake>0) {
 			int max=(numColums*numRows)-1;
-			int head=(int) Math.floor(Math.random()*(max-numColums)+numColums);
+			int min=numColums+1;
+			int head=(int) Math.floor(Math.random()*(max-min)+min);
 			
 			int maxTail;
 			if(head>numColums) {
@@ -342,7 +343,7 @@ public class Game {
 				currentPlayer.setPosition(ladder);
 				currentPlayer.addAttempts();
 				ladder.addToken(currentPlayer, ladder.getFirstToken());
-				message="you found a ladder so you move along to "+ladder.getPosition()+" position";
+				message="You found a ladder so you move along to "+ladder.getPosition()+" position";
 			}
 		}
 		else if(currentPlayer.getPosition().getSnake()!=0) {
